@@ -14,14 +14,13 @@ export class UserService {
 
   async create({ name, email, password }: CreateUserDto) {
     const user = await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
+      where: { email },
     });
 
     if (user) {
-      throw new ConflictException('user alread exists');
+      throw new ConflictException('User already exists');
     }
+
     const passwordHashed = await bcrypt.hash(password, await bcrypt.genSalt());
 
     return this.prisma.user.create({
@@ -40,9 +39,13 @@ export class UserService {
   async findOne(id: string) {
     await this.exists(id);
     return this.prisma.user.findFirst({
-      where: {
-        id,
-      },
+      where: { id },
+    });
+  }
+
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
     });
   }
 
@@ -57,9 +60,7 @@ export class UserService {
     }
 
     return this.prisma.user.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: {
         password,
         ...updateUserDto,
@@ -73,9 +74,7 @@ export class UserService {
   }
 
   async exists(id: string) {
-    const user = await this.prisma.user.count({
-      where: { id },
-    });
+    const user = await this.prisma.user.count({ where: { id } });
 
     if (!user) {
       throw new NotFoundException('User not found');

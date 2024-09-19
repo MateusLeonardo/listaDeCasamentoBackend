@@ -8,15 +8,27 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(uuid()) @map("id")
-  name     String
-  email    String  @unique
-  password String
-  isAdmin  Boolean @default(false)
-  guest    Guests? @relation(fields: [guestId], references: [id])
-  guestId  String? @unique
+  id          String         @id @default(uuid()) @map("id")
+  name        String
+  email       String         @unique
+  password    String?
+  isAdmin     Boolean        @default(false)
+  picture     String?
+  guest       Guests?        @relation(fields: [guestId], references: [id])
+  guestId     String?        @unique
+  providers   AuthProvider[] @relation("UserProviders")
 
   @@map("users")
+}
+
+model AuthProvider {
+  id          String   @id @default(uuid()) @map("id")
+  provider    String
+  providerId  String   @unique
+  user        User     @relation("UserProviders", fields: [userId], references: [id])
+  userId      String
+
+  @@map("auth_providers")
 }
 
 model Guests {
