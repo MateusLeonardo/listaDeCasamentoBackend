@@ -38,7 +38,7 @@ model Guests {
 
 model Companions {
   id          Int     @id @default(autoincrement())
-  telefone    String
+  name        String
   isConfirmed Boolean @default(false)
   guest       Guests  @relation(fields: [guestId], references: [id])
   guestId     Int
