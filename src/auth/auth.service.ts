@@ -14,7 +14,7 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  generateJwt(payload) {
+  generateJwt(payload: { sub: string; email: string }) {
     return this.jwtService.sign(payload);
   }
 
