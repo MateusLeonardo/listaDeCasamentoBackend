@@ -3,6 +3,7 @@ import {
   IsString,
   IsStrongPassword,
   IsBoolean,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -24,5 +25,6 @@ export class CreateUserDto {
   password: string;
 
   @IsBoolean()
+  @IsOptional()
   isAdmin: boolean;
 }
