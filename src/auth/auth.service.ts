@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
@@ -38,6 +39,10 @@ export class AuthService {
 
   async registerUser(user: CreateUserDto) {
     try {
+      const userExists = await this.userService.findByEmail(user.email);
+      if (userExists) {
+        throw new ConflictException('User alread exists');
+      }
       const newUser = await this.userService.create(user);
 
       return this.generateJwt({
