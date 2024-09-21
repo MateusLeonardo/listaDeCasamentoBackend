@@ -33,13 +33,21 @@ export class UserService {
   }
 
   async findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: {
+        providers: true,
+        guest: true,
+      },
+    });
   }
 
   async findOne(id: string) {
     await this.exists(id);
     return this.prisma.user.findFirst({
       where: { id },
+      include: {
+        guest: true,
+      },
     });
   }
 
