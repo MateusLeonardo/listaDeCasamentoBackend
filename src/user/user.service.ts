@@ -35,7 +35,6 @@ export class UserService {
   async findAll() {
     return this.prisma.user.findMany({
       include: {
-        providers: true,
         guest: true,
       },
     });
