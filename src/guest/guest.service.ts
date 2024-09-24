@@ -1,26 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class GuestService {
-  create(createGuestDto: CreateGuestDto) {
-    return 'This action adds a new guest';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(
+    { id, guestId }: User,
+    { telefone, isConfirmed }: CreateGuestDto,
+  ) {
+    if (guestId) {
+      throw new BadRequestException('Guest alread exists');
+    }
+    return this.prisma.guests.create({
+      data: {
+        User: {
+          connect: {
+            id,
+          },
+        },
+        telefone,
+        isConfirmed,
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all guest`;
+    return this.prisma.guests.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} guest`;
+  async findOne(id: string) {
+    const guestExists = await this.prisma.guests.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!guestExists) {
+      throw new BadRequestException('Guest not found');
+    }
+    return this.prisma.guests.findFirst({
+      where: {
+        id,
+      },
+    });
   }
 
-  update(id: number, updateGuestDto: UpdateGuestDto) {
-    return `This action updates a #${id} guest`;
+  async update(id: string, { telefone, isConfirmed }: UpdateGuestDto) {
+    const guestExists = await this.prisma.guests.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!guestExists) {
+      throw new BadRequestException('Guest not found');
+    }
+    return this.prisma.guests.update({
+      where: {
+        id,
+      },
+      data: {
+        isConfirmed,
+        telefone,
+      },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} guest`;
+  async remove(id: string) {
+    return this.prisma.guests.delete({
+      where: {
+        id,
+      },
+    });
   }
 }
