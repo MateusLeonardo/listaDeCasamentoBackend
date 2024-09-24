@@ -18,8 +18,8 @@ export class AuthController {
     const token = await this.authService.signIn(req.user);
 
     res.cookie('access_token', token, {
-      maxAge: 2592000000,
-      sameSite: true,
+      maxAge: 3600000,
+      sameSite: 'lax',
       secure: false,
     });
 
