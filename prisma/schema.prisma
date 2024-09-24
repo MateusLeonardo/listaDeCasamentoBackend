@@ -14,7 +14,7 @@ model User {
   password  String?
   isAdmin   Boolean        @default(false)
   picture   String?
-  guest     Guests?        @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  guest     Guests?        @relation(fields: [guestId], references: [id], onDelete: SetNull)
   guestId   String?        @unique
   providers AuthProvider[] @relation("UserProviders")
 
@@ -46,8 +46,8 @@ model Companions {
   id          String  @id @default(uuid()) @map("id")
   name        String  @unique
   isConfirmed Boolean @default(false)
-  guest       Guests  @relation(fields: [guestId], references: [id], onDelete: Cascade)
-  guestId     String
+  guest       Guests?  @relation(fields: [guestId], references: [id], onDelete: SetNull)
+  guestId     String?
 
   @@map("companions")
 }
