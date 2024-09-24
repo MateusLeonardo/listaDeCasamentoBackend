@@ -8,7 +8,7 @@ import { Strategy, VerifyCallback } from 'passport-google-oauth2';
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(
     private readonly prisma: PrismaService,
-    private configService: ConfigService, // Injetando o ConfigService diretamente
+    private configService: ConfigService,
   ) {
     super({
       clientID: configService.get<string>('GOOGLE_CLIENT_ID'),
