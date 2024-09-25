@@ -35,7 +35,11 @@ export class UserService {
   async findAll() {
     return this.prisma.user.findMany({
       include: {
-        guest: true,
+        guest: {
+          include: {
+            companions: true,
+          },
+        },
       },
     });
   }
@@ -45,7 +49,11 @@ export class UserService {
     return this.prisma.user.findFirst({
       where: { id },
       include: {
-        guest: true,
+        guest: {
+          include: {
+            companions: true,
+          },
+        },
       },
     });
   }
