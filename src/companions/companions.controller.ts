@@ -39,10 +39,10 @@ export class CompanionsController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @ParamId() id: string,
     @Body() updateCompanionDto: UpdateCompanionDto,
   ) {
-    return this.companionsService.update(+id, updateCompanionDto);
+    return this.companionsService.update(id, updateCompanionDto);
   }
 
   @Delete(':id')

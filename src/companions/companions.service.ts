@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCompanionDto } from './dto/create-companion.dto';
 import { UpdateCompanionDto } from './dto/update-companion.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -28,8 +28,21 @@ export class CompanionsService {
     return `This action returns a #${id} companion`;
   }
 
-  update(id: number, updateCompanionDto: UpdateCompanionDto) {
-    return `This action updates a #${id} companion`;
+  async update(id: string, updateCompanionDto: UpdateCompanionDto) {
+    const companion = await this.prisma.companions.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!companion) {
+      throw new NotFoundException();
+    }
+    return this.prisma.companions.update({
+      where: {
+        id,
+      },
+      data: updateCompanionDto,
+    });
   }
 
   remove(id: number) {
