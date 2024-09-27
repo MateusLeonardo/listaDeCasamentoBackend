@@ -24,19 +24,17 @@ export class CompanionsService {
     return this.prisma.companions.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} companion`;
-  }
-
-  async update(id: string, updateCompanionDto: UpdateCompanionDto) {
-    const companion = await this.prisma.companions.findFirst({
+  async findOne(id: string) {
+    await this.exists(id);
+    return this.prisma.companions.findFirst({
       where: {
         id,
       },
     });
-    if (!companion) {
-      throw new NotFoundException();
-    }
+  }
+
+  async update(id: string, updateCompanionDto: UpdateCompanionDto) {
+    await this.exists(id);
     return this.prisma.companions.update({
       where: {
         id,
@@ -47,5 +45,19 @@ export class CompanionsService {
 
   remove(id: number) {
     return `This action removes a #${id} companion`;
+  }
+
+  async exists(id: string) {
+    const companion = await this.prisma.companions.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!companion) {
+      throw new NotFoundException();
+    }
+
+    return companion;
   }
 }

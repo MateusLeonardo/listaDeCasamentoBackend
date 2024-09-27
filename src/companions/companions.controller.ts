@@ -33,8 +33,8 @@ export class CompanionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.companionsService.findOne(+id);
+  findOne(@ParamId() id: string) {
+    return this.companionsService.findOne(id);
   }
 
   @Patch(':id')
