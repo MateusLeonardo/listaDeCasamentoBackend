@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CompanionsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(guestId: string, createCompanionDto: CreateCompanionDto) {
+  async create(guestId: string, createCompanionDto: CreateCompanionDto) {
     return this.prisma.companions.create({
       data: {
         ...createCompanionDto,
@@ -20,7 +20,7 @@ export class CompanionsService {
     });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.companions.findMany();
   }
 
@@ -43,8 +43,13 @@ export class CompanionsService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} companion`;
+  async remove(id: string) {
+    await this.exists(id);
+    return this.prisma.companions.delete({
+      where: {
+        id,
+      },
+    });
   }
 
   async exists(id: string) {

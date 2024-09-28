@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
   UseGuards,
 } from '@nestjs/common';
@@ -28,7 +27,7 @@ export class CompanionsController {
   }
 
   @Get()
-  findAll(@ParamId() id: string) {
+  findAll() {
     return this.companionsService.findAll();
   }
 
@@ -46,7 +45,7 @@ export class CompanionsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companionsService.remove(+id);
+  remove(@ParamId() id: string) {
+    return this.companionsService.remove(id);
   }
 }
