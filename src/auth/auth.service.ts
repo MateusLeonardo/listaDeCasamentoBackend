@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
@@ -16,8 +17,18 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  generateJwt(payload: JwtPayloadType) {
+  async generateJwt(payload: JwtPayloadType) {
     return this.jwtService.sign(payload);
+  }
+
+  async validateJwt(token: string) {
+    try {
+      return this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET,
+      });
+    } catch (err) {
+      throw new UnauthorizedException(`${err}: Token inválido`);
+    }
   }
 
   async signIn(user: CreateUserDto) {
