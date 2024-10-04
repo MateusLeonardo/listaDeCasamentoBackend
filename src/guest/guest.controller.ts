@@ -7,12 +7,13 @@ import {
   Param,
   Delete,
   UseGuards,
-  Request,
 } from '@nestjs/common';
 import { GuestService } from './guest.service';
 import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Guest } from 'src/decorators/guest-decorator';
+import { User } from 'src/decorators/user-decorator';
 
 @UseGuards(JwtAuthGuard)
 @Controller('guest')
@@ -20,13 +21,18 @@ export class GuestController {
   constructor(private readonly guestService: GuestService) {}
 
   @Post()
-  create(@Request() req, @Body() createGuestDto: CreateGuestDto) {
-    return this.guestService.create(req.user, createGuestDto);
+  create(@User() user, @Body() createGuestDto: CreateGuestDto) {
+    return this.guestService.create(user, createGuestDto);
   }
 
   @Get()
   findAll() {
     return this.guestService.findAll();
+  }
+
+  @Get('profile')
+  getProfile(@Guest() guestId) {
+    return this.guestService.getProfile(guestId);
   }
 
   @Get(':id')
