@@ -75,4 +75,21 @@ export class GuestService {
       },
     });
   }
+
+  async getProfile(guestId: string) {
+    const guest = await this.prisma.guests.findFirst({
+      where: {
+        id: guestId,
+      },
+      include: {
+        companions: true,
+      },
+    });
+
+    if (!guest) {
+      throw new BadRequestException('Guest not found');
+    }
+
+    return guest;
+  }
 }
