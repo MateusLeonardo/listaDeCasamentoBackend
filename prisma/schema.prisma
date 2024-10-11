@@ -46,7 +46,7 @@ model Companions {
   id          String  @id @default(uuid()) @map("id")
   name        String  @unique
   isConfirmed Boolean @default(false)
-  guest       Guests?  @relation(fields: [guestId], references: [id], onDelete: SetNull)
+  guest       Guests? @relation(fields: [guestId], references: [id], onDelete: Cascade)
   guestId     String?
 
   @@map("companions")
