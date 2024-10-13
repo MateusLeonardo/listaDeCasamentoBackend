@@ -26,8 +26,9 @@ export class AuthService {
       return this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET,
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      throw new UnauthorizedException(`${err}: Token inválido`);
+      throw new UnauthorizedException(`Token inválido`);
     }
   }
 
