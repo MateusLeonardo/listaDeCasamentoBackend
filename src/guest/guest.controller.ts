@@ -21,32 +21,35 @@ export class GuestController {
   constructor(private readonly guestService: GuestService) {}
 
   @Post()
-  create(@User() user, @Body() createGuestDto: CreateGuestDto) {
+  async create(@User() user, @Body() createGuestDto: CreateGuestDto) {
     return this.guestService.create(user, createGuestDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.guestService.findAll();
   }
 
   @Get('profile')
-  getProfile(@Guest() guestId) {
+  async getProfile(@Guest() guestId) {
     return this.guestService.getProfile(guestId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.guestService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGuestDto: UpdateGuestDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateGuestDto: UpdateGuestDto,
+  ) {
     return this.guestService.update(id, updateGuestDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.guestService.remove(id);
   }
 }
