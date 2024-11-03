@@ -7,7 +7,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CompanionsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(guestId: string, createCompanionDto: CreateCompanionDto) {
+  async create(guestId: string | null, createCompanionDto: CreateCompanionDto) {
+    if (guestId === null) {
+      throw new NotFoundException('Guest not found');
+    }
     return this.prisma.companions.create({
       data: {
         ...createCompanionDto,

@@ -12,32 +12,36 @@ import { CreateCompanionDto } from './dto/create-companion.dto';
 import { UpdateCompanionDto } from './dto/update-companion.dto';
 import { ParamId } from 'src/decorators/param-decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { User } from 'src/decorators/user-decorator';
 
 @UseGuards(JwtAuthGuard)
-@Controller('guest/:id/companions')
+@Controller('guest/:guestId/companion')
 export class CompanionsController {
   constructor(private readonly companionsService: CompanionsService) {}
 
   @Post()
-  create(
-    @ParamId() guestId: string,
-    @Body() createCompanionDto: CreateCompanionDto,
-  ) {
-    return this.companionsService.create(guestId, createCompanionDto);
+  async create(@User() user, @Body() createCompanionDto: CreateCompanionDto[]) {
+    const results = await Promise.all(
+      createCompanionDto.map((companion) =>
+        this.companionsService.create(user.guestId, companion),
+      ),
+    );
+
+    return { success: true, results };
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.companionsService.findAll();
   }
 
   @Get(':id')
-  findOne(@ParamId() id: string) {
+  async findOne(@ParamId() id: string) {
     return this.companionsService.findOne(id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @ParamId() id: string,
     @Body() updateCompanionDto: UpdateCompanionDto,
   ) {
@@ -45,7 +49,7 @@ export class CompanionsController {
   }
 
   @Delete(':id')
-  remove(@ParamId() id: string) {
+  async remove(@ParamId() id: string) {
     return this.companionsService.remove(id);
   }
 }
